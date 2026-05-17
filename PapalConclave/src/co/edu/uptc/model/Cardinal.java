@@ -25,6 +25,12 @@ public String validationVote(int age) {
 	}
 	return message;
 }
+@Override
+public String toString() {
+	
+	return "Nombre: "+name+"\nEdad: "+age+"\nRango: "+ range+"\n";
+	
+}
 public boolean getVote() {
 	return vote;
 }

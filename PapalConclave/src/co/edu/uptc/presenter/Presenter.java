@@ -22,6 +22,7 @@ public class Presenter {
 	private int cardinalVoters;
 	private int rol;
 	private CardinalVoters objectVoters;
+	private RoleAsigned objectRoleAsigned;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -29,6 +30,7 @@ public class Presenter {
 		objectProtodeacon=new CardinalProtodeacon();
 		objectDean =new CardinalDean();
 		objectVoters=new CardinalVoters();
+		objectRoleAsigned=new RoleAsigned();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -45,6 +47,7 @@ public class Presenter {
 		message= "A continuación registraremos la información de los cardenales asistentes";
 		objectIOManager.show(message);
 		recibeNamesMatrix();
+		requestInformation();
 	}
 	public String requestInformation() {
 		boolean protodeacon=false;
@@ -114,9 +117,38 @@ public class Presenter {
 			}
 
 		}
-		showMatrix();
+//		showMatrix();
+		minimunCardinals();
 		return "";
-	}	
+	}	 
+	public void minimunCardinals() {
+		boolean again=objectRoleAsigned.confirmVoters(objectVoters.getVoters());
+		if(again==true) {
+			message="Hay menos de 9 cardenales votantes, debes esperar que llegen mas, por eso se repetira el proceso.";
+			objectIOManager.show(message);
+			welcome();
+		}
+		else {
+			asigmentRoles();
+		}
+	}
+	public void asigmentRoles() {
+		
+		objectRoleAsigned.assignRoles(objectVoters.getVoters());
+		message="Tras el sorteo reglamentario los roles fueron asignados.\nLos escrutadores serán:";
+		objectIOManager.show(message);
+		ArrayList<Cardinal> list=objectRoleAsigned.getScrutineers();
+		objectIOManager.showList(list);
+		message="Los revisores serán:";
+		objectIOManager.show(message);
+		list=objectRoleAsigned.getReviewers();
+		objectIOManager.showList(list);
+		message="Los asistentes serán:";
+		objectIOManager.show(message);
+		list=objectRoleAsigned.getAssistants();
+		objectIOManager.showList(list);
+		
+	}
 	public void recibeNamesMatrix(){
 		namesMatrix=new String [numberCardenals][2];
 		namesMatrix=objectCardenalMatrix.getNamesMatrix();
@@ -135,13 +167,12 @@ public class Presenter {
 		}
 		System.out.println("cardenales votantes: "+ cardinalVoters);
 		ArrayList<Cardinal> voters = objectVoters.getVoters();
-		for(Cardinal c : voters) {
-			System.out.println(c);
+		for(Cardinal objectCardinal : voters) {
+			System.out.println(objectCardinal);
 		}
 
 	}
 	public void init() {
 		welcome();
-		requestInformation();
 	}
 }
