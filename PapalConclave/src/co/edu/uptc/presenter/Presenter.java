@@ -1,5 +1,7 @@
 package co.edu.uptc.presenter;
 
+import java.util.ArrayList;
+
 import co.edu.uptc.model.*;
 import co.edu.uptc.view.IOManager;
 
@@ -8,6 +10,7 @@ public class Presenter {
 	private CardinalMatrix objectCardenalMatrix;
 	private CardinalProtodeacon objectProtodeacon;
 	private CardinalDean objectDean;
+	private Cardinal objectCardinal;
 	private String message;
 	private int age;
 	private String[][] namesMatrix;
@@ -18,12 +21,14 @@ public class Presenter {
 	private int j;
 	private int cardinalVoters;
 	private int rol;
+	private CardinalVoters objectVoters;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
 		objectCardenalMatrix=new CardinalMatrix();
 		objectProtodeacon=new CardinalProtodeacon();
 		objectDean =new CardinalDean();
+		objectVoters=new CardinalVoters();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -39,6 +44,7 @@ public class Presenter {
 		objectCardenalMatrix.createMatrix(numberCardenals);
 		message= "A continuación registraremos la información de los cardenales asistentes";
 		objectIOManager.show(message);
+		recibeNamesMatrix();
 	}
 	public String requestInformation() {
 		boolean protodeacon=false;
@@ -48,7 +54,6 @@ public class Presenter {
 			name=objectIOManager.input(message);
 			message="Ahora digite su edad: ";
 			age=Integer.parseInt(objectIOManager.input(message));
-			objectIOManager.show(validationAge());
 			int range=0;
 			while(range<1 || range>5) {
 				message="Ahora ingrese su rango en la iglesia. \nCardenal Obispo(1)\n"
@@ -60,7 +65,7 @@ public class Presenter {
 					break;
 				case 2:
 					letterRange="Cardenal Presbítero";
-						break;
+					break;
 				case 3:
 					letterRange="Cardenal Diácono";
 					break;
@@ -72,7 +77,7 @@ public class Presenter {
 					}				
 					else{
 						rol=1;
-					range=0;	
+						range=0;	
 					}
 					message=objectDean.roleOccupied(rol);
 					objectIOManager.show(message);
@@ -89,30 +94,29 @@ public class Presenter {
 					}
 					message=objectProtodeacon.roleOccupied(rol);
 					objectIOManager.show(message);
-				break;
+					break;
 				default:
 					objectIOManager.show("Opción invalida");
 					break;
 				}
 			}
-			
-			recibeNamesMatrix();
-			fillNamesMatrix();
+
+			objectCardinal=new Cardinal(name,age,letterRange);
+			objectIOManager.show(objectCardinal.validationVote(age));
+			boolean vote=objectCardinal.getVote();
+			if (vote==true) {
+				objectVoters.fillArray(objectCardinal);
+				cardinalVoters++;
+				fillNamesMatrix();
+			}
+			else {
+				fillNamesMatrix();
+			}
+
 		}
 		showMatrix();
 		return "";
-	}
-	public String validationAge() {
-		if (age<80) {
-			message="Usted esta autorizado a votar.";
-			cardinalVoters++;
-		}
-		else {
-			message="Usted no esta autorizado para votar.";
-		}
-		return message;
-	}
-	
+	}	
 	public void recibeNamesMatrix(){
 		namesMatrix=new String [numberCardenals][2];
 		namesMatrix=objectCardenalMatrix.getNamesMatrix();
@@ -120,7 +124,7 @@ public class Presenter {
 	public void fillNamesMatrix() {
 		namesMatrix[i][j]=name;
 		namesMatrix[i][j+1]=letterRange;
-	//	namesMatrix[i][j+2]=age;
+		//	namesMatrix[i][j+2]=age;
 	}
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {
@@ -130,6 +134,10 @@ public class Presenter {
 			System.out.println();
 		}
 		System.out.println("cardenales votantes: "+ cardinalVoters);
+		ArrayList<Cardinal> voters = objectVoters.getVoters();
+		for(Cardinal c : voters) {
+			System.out.println(c);
+		}
 
 	}
 	public void init() {
