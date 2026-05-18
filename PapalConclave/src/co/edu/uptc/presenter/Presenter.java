@@ -23,6 +23,8 @@ public class Presenter {
 	private int rol;
 	private CardinalVoters objectVoters;
 	private RoleAsigned objectRoleAsigned;
+	private int abstention;
+	private int numberVotes;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -39,6 +41,8 @@ public class Presenter {
 		j=0;
 		cardinalVoters=0;
 		rol=0;
+		abstention=0;
+		numberVotes=0;
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
@@ -158,6 +162,45 @@ public class Presenter {
 		namesMatrix[i][j+1]=letterRange;
 		//	namesMatrix[i][j+2]=age;
 	}
+	public String votingMenu() {
+		message="Las votaciones iniciaran a partir de este momento, estamos en la Capilla Sixtina, adentro solo estan presentes los cardenales votantes.";
+		objectIOManager.show(message);
+		for(int i=1;i<=cardinalVoters;i++) {
+			message="Estimado cardenal ¿Qué va a hacer en este momento? ";
+			String []options= {"Abstenerse al voto", "Votar"};
+			int election=objectIOManager.optionsInput(message, null, options);
+			switch (election) {
+			case 0:
+				abstention++;
+				break;
+			case 1:
+				boolean repetition=true;
+				while(repetition) {
+				message="Cardenal: "+ i+ "a continuación digite el nombre y apellido de su candidato.";
+				String candidate=objectIOManager.input(message);
+				boolean coincidence=objectCardenalMatrix.searchCadidate(namesMatrix, candidate);
+				if (coincidence==true) {
+					repetition=false;
+					numberVotes++;
+					
+				}
+				else {
+					message="Voto invalido. Para que tu voto sea valido, es necesario que escribas el nombre y apellido correctamente";
+					objectIOManager.show(message);
+					repetition=true;
+				}
+				}
+				break;
+				default:
+					break;
+			}
+			
+			
+		}
+		return "";
+	}
+	
+//RECORDAR BORRAR SHOWMATRIX
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {
 			for(int j=0; j<namesMatrix[i].length;j++) {

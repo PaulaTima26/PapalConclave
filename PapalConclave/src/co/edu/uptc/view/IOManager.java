@@ -2,6 +2,7 @@ package co.edu.uptc.view;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import co.edu.uptc.model.Cardinal;
@@ -15,6 +16,10 @@ public class IOManager {
 	public String show(String message) {
 		JOptionPane.showMessageDialog(null, message);
 		return message;
+	}
+	public int optionsInput(String message, ImageIcon icon, Object[] options) {
+		int option= JOptionPane.showOptionDialog(null, message,"MENÚ", 0, 0,icon, options, "");
+		return option;
 	}
 	public void showList(ArrayList<Cardinal> listTwo){
 		ArrayList <Cardinal>list=listTwo;

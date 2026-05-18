@@ -15,7 +15,6 @@ public class CardinalVoters {
 		
 	}
 	public ArrayList <Cardinal>getVoters() {
-		
 		return voters;
 	}
 }
