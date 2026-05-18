@@ -1,21 +1,16 @@
 package co.edu.uptc.model;
 
+import java.util.ArrayList;
+
 public class RecordVotes {
-private Cardinal candidate;
-private int votes;
 
-public RecordVotes() {
-	this.candidate=candidate;
-	votes=1;
-}
-
-public void addVote() {
-	votes++;
-}
-public Cardinal getCandidate() {
-	return candidate;
-}
-public int getVotes() {
-	return votes;
-}
+	ArrayList <Elected> votes;
+	
+	public RecordVotes() {
+		votes=new ArrayList<>();
+		
+	}
+	
+	public void fillVotes() {
+	}
 }

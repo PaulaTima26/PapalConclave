@@ -11,6 +11,7 @@ public class Presenter {
 	private CardinalProtodeacon objectProtodeacon;
 	private CardinalDean objectDean;
 	private Cardinal objectCardinal;
+	private Elected objectElected;
 	private String message;
 	private int age;
 	private String[][] namesMatrix;
@@ -33,6 +34,7 @@ public class Presenter {
 		objectDean =new CardinalDean();
 		objectVoters=new CardinalVoters();
 		objectRoleAsigned=new RoleAsigned();
+		objectElected=new Elected();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -180,6 +182,7 @@ public class Presenter {
 				String candidate=objectIOManager.input(message);
 				boolean coincidence=objectCardenalMatrix.searchCadidate(namesMatrix, candidate);
 				if (coincidence==true) {
+					objectElected.getCandidate(candidate);
 					repetition=false;
 					numberVotes++;
 					

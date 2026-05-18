@@ -16,7 +16,7 @@ public class CardinalMatrix {
 		boolean coincidence=false;
 		String searched=candidate;
 		for (int i=0; i<namesMatrix.length;i++) {
-			if (namesMatrix[i][0]==searched) {
+			if (namesMatrix[i][0].equalsIgnoreCase(searched)) {
 				coincidence=true;
 			}
 			else {
