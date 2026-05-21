@@ -10,9 +10,11 @@ public class Presenter {
 	private CardinalMatrix objectCardenalMatrix;
 	private CardinalProtodeacon objectProtodeacon;
 	private CardinalDean objectDean;
+	private CardinalScrutiners objectScrutiners;
 	private Cardinal objectCardinal;
 	private RecordVotes objectRecordVotes;
 	private TotalCardinals objectTotalCardinals;
+	private ValidationVotes objectValidationVote;
 	private String message;
 	private int age;
 	private String[][] namesMatrix;
@@ -28,6 +30,7 @@ public class Presenter {
 	private int voterPossition;
 	private int abstention;
 	private int numberVotes;
+	private int inputPin;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -38,6 +41,8 @@ public class Presenter {
 		objectRoleAsigned=new RoleAsigned();
 		objectRecordVotes=new RecordVotes();
 		objectTotalCardinals=new TotalCardinals();
+		objectValidationVote=new ValidationVotes();
+		objectScrutiners=new CardinalScrutiners();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -49,6 +54,7 @@ public class Presenter {
 		voterPossition=0;
 		abstention=0;
 		numberVotes=0;
+		inputPin=0;
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
@@ -150,6 +156,8 @@ public class Presenter {
 		objectIOManager.show(message);
 		ArrayList<Cardinal> list=objectRoleAsigned.getScrutineers();
 		objectIOManager.showList(list);
+		message="El pin de acceso para los escrutadores es: "+ objectScrutiners.generateAccess();
+		objectIOManager.show(message);
 		message="Los revisores serán:";
 		objectIOManager.show(message);
 		list=objectRoleAsigned.getReviewers();
@@ -200,16 +208,74 @@ public class Presenter {
 					}
 					break;
 					default:
-						break;
+						System.exit(0);
 				}
 			}
-			objectRecordVotes.showVotes();
+			validationQuantity();
 		return "";
 	}
-	public void validation() {
+	public void validationQuantity() {
+		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes);
+		if (comparation) {
+			message="Se guardaron los resultados de la votación";
+			objectIOManager.show(message);
+			boolean access=false;
+			while(access==false) {
+			message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
+			inputPin=Integer.parseInt(objectIOManager.input(message));
+			access=objectScrutiners.confirmAccess(inputPin);
+			if (access) {
+				access=true;
+				message=objectRecordVotes.showVotes();
+				objectIOManager.show(message);
+				validationWinner();
+			}
+			else {
+				access=false;
+				message="Ese no es el pin, intentelo de nuevo.";
+				objectIOManager.show(message);
+			}
+			}
+		}
+		else {
+			objectRecordVotes.clean();
+			message="El número de votos fue menor al de cardenales votantes. Resultados anulados.";
+			objectIOManager.show(message);
+		}
 		
 	}
+	public void validationWinner() {
+		String winner = objectRecordVotes.winnerCandidate();
+		int votesWinner = objectRecordVotes.getMaxVotes();
+		boolean elected =objectValidationVote.validateWinner(votesWinner, cardinalVoters);
+		if(elected == true) {
+		    message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
+		    objectIOManager.show(message);
+		    
+		}
+		else {
+		    message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
+		    objectIOManager.show(message);
+		}
+	}
 	
+	public void confirmPapa() {
+		message=objectDean.confirmPapa();
+		objectIOManager.show(message);
+		String [] options = {"Sí acepto", "No acepto"};
+		int answer =objectIOManager.optionsInput(message,null,options);
+		if(answer==0) {
+			announcement();
+		}
+		else {
+			objectRecordVotes.clean();
+			message="El cardenal ha rechazado el puesto. Iniciaremos otra ronda de votación";
+			objectIOManager.show(message);
+		}
+	}
+	public void announcement() {
+		
+	}
 //RECORDAR BORRAR SHOWMATRIX
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {

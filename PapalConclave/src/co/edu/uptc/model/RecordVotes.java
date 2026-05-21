@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecordVotes {
-
-	Map <String,Integer> votes;
+	private   int maxVotes;
+	private Map <String,Integer> votes;
 	
 	public RecordVotes() {
 		votes=new HashMap<>();
-		
+		maxVotes=0;
 	}
 	public void fillVotes(Cardinal found) {
 		String name=found.getName();
@@ -28,15 +28,41 @@ public class RecordVotes {
 	    }
 
 	}
-	//Pruebita
-	public void showVotes() {
+	public void clean() {
+		votes.clear();
+	}
+	
+	public String winnerCandidate() {
 
-	    for(String name : votes.keySet()) {
+	    String winner = "";
+	  
 
-	        System.out.println(name + " : " + votes.get(name));
+	    for(String candidate : votes.keySet()) {
 
+	        int currentVotes = votes.get(candidate);
+
+	        if(currentVotes > maxVotes) {
+
+	            maxVotes = currentVotes;
+	            winner = candidate;
+
+	        }
 	    }
 
+	    return winner;
+	}
+	public int getMaxVotes() {
+		return maxVotes;
+	}
+	//Pruebita
+	public String showVotes() {
+String message="";
+	    for(String name : votes.keySet()) {
+
+	    	message+=name + " : " + votes.get(name)+"\n";
+
+	    }
+return message;
 	}
 	
 	
