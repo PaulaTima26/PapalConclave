@@ -2,6 +2,8 @@ package co.edu.uptc.presenter;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
 import co.edu.uptc.model.*;
 import co.edu.uptc.view.IOManager;
 
@@ -15,6 +17,7 @@ public class Presenter {
 	private RecordVotes objectRecordVotes;
 	private TotalCardinals objectTotalCardinals;
 	private ValidationVotes objectValidationVote;
+	private Images objectImages;
 	private String message;
 	private int age;
 	private String[][] namesMatrix;
@@ -33,6 +36,7 @@ public class Presenter {
 	private int numberVotes;
 	private int inputPin;
 	private String winner;
+	private ImageIcon icon;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -46,6 +50,7 @@ public class Presenter {
 		objectValidationVote=new ValidationVotes();
 		objectScrutiners=new CardinalScrutiners();
 		objectDayControl=new VotingDayControl();
+		objectImages=new Images();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -62,6 +67,7 @@ public class Presenter {
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
+		icon=objectImages.getCardinalsIcon();
 		numberCardenals= Integer.parseInt(objectIOManager.input(message));
 		objectCardenalMatrix.createMatrix(numberCardenals);
 		message= "A continuación registraremos la información de los cardenales asistentes";
@@ -181,7 +187,6 @@ public class Presenter {
 		namesMatrix[voterPossition][j+1]=letterRange;
 	}
 	public String votingMenu() {
-		objectDayControl.registerVoting();
 		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina "+ objectDayControl.getProces();
 		objectIOManager.show(message);
 		for(int j=0; j<cardinalVoters; j++) {
@@ -220,8 +225,9 @@ public class Presenter {
 		return "";
 	}
 	public void validationQuantity() {
-		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes);
+		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes, abstention);
 		if (comparation) {
+			objectDayControl.registerVoting();
 			message="Se guardaron los resultados de la votación";
 			objectIOManager.show(message);
 			boolean access=false;
@@ -246,6 +252,8 @@ public class Presenter {
 			objectRecordVotes.clean();
 			message="El número de votos fue menor al de cardenales votantes. Resultados anulados.";
 			objectIOManager.show(message);
+			numberVotes = 0;
+			abstention = 0;
 			votingMenu();
 		}
 
@@ -264,6 +272,8 @@ public class Presenter {
 			message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
 			objectIOManager.show(message);
 			objectRecordVotes.clean();
+			numberVotes = 0;
+			abstention = 0;
 			votingMenu();
 		}
 	}
@@ -280,6 +290,8 @@ public class Presenter {
 			objectRecordVotes.clean();
 			message="El cardenal ha rechazado el puesto. Iniciaremos otra ronda de votación";
 			objectIOManager.show(message);
+			numberVotes = 0;
+			abstention = 0;
 			votingMenu();
 		}
 	}

@@ -3,9 +3,9 @@ package co.edu.uptc.model;
 public class ValidationVotes {
 
 
-	public boolean comparison(int cardinalVoters, int numberVotes) {
+	public boolean comparison(int cardinalVoters, int numberVotes, int abstention) {
 		boolean comparation=false;
-		if (numberVotes<cardinalVoters) {
+		if (numberVotes + abstention == cardinalVoters) {
 			comparation=false;
 		}
 		else {

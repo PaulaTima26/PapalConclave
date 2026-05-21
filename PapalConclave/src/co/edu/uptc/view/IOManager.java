@@ -10,6 +10,7 @@ import co.edu.uptc.model.Cardinal;
 public class IOManager {
 
 	public String input(String message) {
+		
 		String data=JOptionPane.showInputDialog(message);
 		return data;
 	}

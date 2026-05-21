@@ -5,25 +5,33 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class Images {
-	private ImageIcon cardinalIcon;
+	private ImageIcon habemusPapaIcon;
 	private ImageIcon cardinalsIcon;
 	private ImageIcon urnaIcon;
+	private ImageIcon noPapaIcon;
+
 
 	public Images() {
-		cardinalIcon= new ImageIcon(getClass().getResource("/co/edu/uptc/model/Icono usuario.png"));
-		cardinalsIcon= new ImageIcon(getClass().getResource("/co/edu/uptc/model/IconoUniversidad.png"));
-		urnaIcon=new ImageIcon(getClass().getResource("/co/edu/uptc/model/GifPregunta.gif"));
+		cardinalsIcon= new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/cardenales.png"));
+		habemusPapaIcon= new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/habemus papa.png"));
+		urnaIcon=new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/urna.png"));
+		noPapaIcon=new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/no hay papa.png"));
 	}
-	public ImageIcon getcardinalIcon() {
-		return cardinalIcon;
-	}
-	
+
 	public ImageIcon getCardinalsIcon() {
 		return cardinalsIcon;
 	}
 	
+	public ImageIcon getHabemusPapaIcon() {
+		return habemusPapaIcon;
+	}
 	
 	public ImageIcon getUrnaIcon() {
 		return urnaIcon;
 	}
+	
+	public ImageIcon getNoPapaIcon() {
+		return noPapaIcon;
+	}
+	
 }

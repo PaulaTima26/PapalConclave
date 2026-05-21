@@ -29,6 +29,7 @@ public class RecordVotes {
 
 	}
 	public void clean() {
+	    maxVotes = 0;
 		votes.clear();
 	}
 	
