@@ -27,10 +27,12 @@ public class Presenter {
 	private int rol;
 	private CardinalVoters objectVoters;
 	private RoleAsigned objectRoleAsigned;
+	private VotingDayControl objectDayControl;
 	private int voterPossition;
 	private int abstention;
 	private int numberVotes;
 	private int inputPin;
+	private String winner;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -43,6 +45,7 @@ public class Presenter {
 		objectTotalCardinals=new TotalCardinals();
 		objectValidationVote=new ValidationVotes();
 		objectScrutiners=new CardinalScrutiners();
+		objectDayControl=new VotingDayControl();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -55,6 +58,7 @@ public class Presenter {
 		abstention=0;
 		numberVotes=0;
 		inputPin=0;
+		winner="";
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
@@ -98,7 +102,7 @@ public class Presenter {
 						rol=1;
 						range=0;	
 					}
-					message=objectDean.roleOccupied(rol);
+					message=objectDean.roleOccupied(rol,name);
 					objectIOManager.show(message);
 					break;
 				case 5:
@@ -111,7 +115,7 @@ public class Presenter {
 						rol=1;
 						range=0;
 					}
-					message=objectProtodeacon.roleOccupied(rol);
+					message=objectProtodeacon.roleOccupied(rol,name);
 					objectIOManager.show(message);
 					break;
 				default:
@@ -150,7 +154,7 @@ public class Presenter {
 		}
 	}
 	public void asigmentRoles() {
-		
+
 		objectRoleAsigned.assignRoles(objectVoters.getVoters());
 		message="Tras el sorteo reglamentario los roles fueron asignados.\nLos escrutadores serán:";
 		objectIOManager.show(message);
@@ -177,21 +181,22 @@ public class Presenter {
 		namesMatrix[voterPossition][j+1]=letterRange;
 	}
 	public String votingMenu() {
-		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina, adentro solo estan presentes los cardenales votantes.";
+		objectDayControl.registerVoting();
+		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina "+ objectDayControl.getProces();
 		objectIOManager.show(message);
-			for(int j=0; j<cardinalVoters; j++) {
-			    String name = namesMatrix[j][0];
-			    String range = namesMatrix[j][1];
-			    message=range+ " "+ name +"¿Qué va a hacer en este momento? ";
-				String []options= {"Abstenerse al voto", "Votar"};
-				int election=objectIOManager.optionsInput(message, null, options);
-				switch (election) {
-				case 0:
-					abstention++;
-					break;
-				case 1:
-					boolean repetition=true;
-					while(repetition) {
+		for(int j=0; j<cardinalVoters; j++) {
+			String name = namesMatrix[j][0];
+			String range = namesMatrix[j][1];
+			message=range+ " "+ name +"¿Qué va a hacer en este momento? ";
+			String []options= {"Abstenerse al voto", "Votar"};
+			int election=objectIOManager.optionsInput(message, null, options);
+			switch (election) {
+			case 0:
+				abstention++;
+				break;
+			case 1:
+				boolean repetition=true;
+				while(repetition) {
 					message="Cardenal: "+ name+ ", digite el nombre y apellido de su candidato.";
 					String candidate=objectIOManager.input(message);
 					Cardinal found=objectTotalCardinals.searchCardinal(candidate);
@@ -205,13 +210,13 @@ public class Presenter {
 						repetition=false;
 						numberVotes++;
 					}
-					}
-					break;
-					default:
-						System.exit(0);
 				}
+				break;
+			default:
+				System.exit(0);
 			}
-			validationQuantity();
+		}
+		validationQuantity();
 		return "";
 	}
 	public void validationQuantity() {
@@ -221,44 +226,48 @@ public class Presenter {
 			objectIOManager.show(message);
 			boolean access=false;
 			while(access==false) {
-			message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
-			inputPin=Integer.parseInt(objectIOManager.input(message));
-			access=objectScrutiners.confirmAccess(inputPin);
-			if (access) {
-				access=true;
-				message=objectRecordVotes.showVotes();
-				objectIOManager.show(message);
-				validationWinner();
-			}
-			else {
-				access=false;
-				message="Ese no es el pin, intentelo de nuevo.";
-				objectIOManager.show(message);
-			}
+				message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
+				inputPin=Integer.parseInt(objectIOManager.input(message));
+				access=objectScrutiners.confirmAccess(inputPin);
+				if (access) {
+					access=true;
+					message=objectRecordVotes.showVotes();
+					objectIOManager.show(message);
+					validationWinner();
+				}
+				else {
+					access=false;
+					message="Ese no es el pin, intentelo de nuevo.";
+					objectIOManager.show(message);
+				}
 			}
 		}
 		else {
 			objectRecordVotes.clean();
 			message="El número de votos fue menor al de cardenales votantes. Resultados anulados.";
 			objectIOManager.show(message);
+			votingMenu();
 		}
-		
+
 	}
 	public void validationWinner() {
-		String winner = objectRecordVotes.winnerCandidate();
+		winner = objectRecordVotes.winnerCandidate();
 		int votesWinner = objectRecordVotes.getMaxVotes();
 		boolean elected =objectValidationVote.validateWinner(votesWinner, cardinalVoters);
 		if(elected == true) {
-		    message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
-		    objectIOManager.show(message);
-		    
+			message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
+			objectIOManager.show(message);
+			confirmPapa();
+
 		}
 		else {
-		    message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
-		    objectIOManager.show(message);
+			message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
+			objectIOManager.show(message);
+			objectRecordVotes.clean();
+			votingMenu();
 		}
 	}
-	
+
 	public void confirmPapa() {
 		message=objectDean.confirmPapa();
 		objectIOManager.show(message);
@@ -271,12 +280,16 @@ public class Presenter {
 			objectRecordVotes.clean();
 			message="El cardenal ha rechazado el puesto. Iniciaremos otra ronda de votación";
 			objectIOManager.show(message);
+			votingMenu();
 		}
 	}
 	public void announcement() {
-		
+		message=objectProtodeacon.announcementPapa();
+		objectIOManager.show(message);
+
 	}
-//RECORDAR BORRAR SHOWMATRIX
+	
+	//RECORDAR BORRAR SHOWMATRIX
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {
 			for(int j=0; j<namesMatrix[i].length;j++) {
