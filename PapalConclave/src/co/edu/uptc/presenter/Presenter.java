@@ -25,6 +25,7 @@ public class Presenter {
 	private int rol;
 	private CardinalVoters objectVoters;
 	private RoleAsigned objectRoleAsigned;
+	private int voterPossition;
 	private int abstention;
 	private int numberVotes;
 
@@ -45,6 +46,7 @@ public class Presenter {
 		j=0;
 		cardinalVoters=0;
 		rol=0;
+		voterPossition=0;
 		abstention=0;
 		numberVotes=0;
 	}
@@ -119,6 +121,7 @@ public class Presenter {
 				objectVoters.fillArray(objectCardinal);
 				cardinalVoters++;
 				fillNamesMatrix();
+				voterPossition++;
 				objectTotalCardinals.fillArray(objectCardinal);
 			}
 			else {
@@ -162,13 +165,13 @@ public class Presenter {
 		namesMatrix=objectCardenalMatrix.getNamesMatrix();
 	}
 	public void fillNamesMatrix() {
-		namesMatrix[i][j]=name;
-		namesMatrix[i][j+1]=letterRange;
+		namesMatrix[voterPossition][j]=name;
+		namesMatrix[voterPossition][j+1]=letterRange;
 	}
 	public String votingMenu() {
 		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina, adentro solo estan presentes los cardenales votantes.";
 		objectIOManager.show(message);
-			for(int j=0; j<namesMatrix.length; j++) {
+			for(int j=0; j<cardinalVoters; j++) {
 			    String name = namesMatrix[j][0];
 			    String range = namesMatrix[j][1];
 			    message=range+ " "+ name +"¿Qué va a hacer en este momento? ";
@@ -199,9 +202,12 @@ public class Presenter {
 					default:
 						break;
 				}
-				objectRecordVotes.showVotes();
 			}
+			objectRecordVotes.showVotes();
 		return "";
+	}
+	public void validation() {
+		
 	}
 	
 //RECORDAR BORRAR SHOWMATRIX
