@@ -16,11 +16,11 @@ public String validationVote(int age) {
 	String message="";
 	this.age=age;
 	if (this.age<80) {
-		message="Usted esta autorizado a votar.";
+		message="Usted está autorizado a votar.";
 		vote= true;
 	}
 	else {
-		message="Usted no esta autorizado para votar.";
+		message="Usted no está autorizado para votar.";
 		vote=false;
 	}
 	return message;
@@ -28,8 +28,10 @@ public String validationVote(int age) {
 @Override
 public String toString() {
 	
-	return "Nombre: "+name+"\nEdad: "+age+"\nRango: "+ range+"\n";
-	
+	return "Nombre: "+name+"\nEdad: "+age+"\nRango: "+ range+"\n";	
+}
+public String getName() {
+	return name;
 }
 public boolean getVote() {
 	return vote;

@@ -11,7 +11,8 @@ public class CardinalMatrix {
 	}
 	public String[][] getNamesMatrix() {
 		return namesMatrix;
-	} 
+	}
+	
 	public boolean searchCadidate(String[][] namesMatrix, String candidate) {
 		boolean coincidence=false;
 		String searched=candidate;
