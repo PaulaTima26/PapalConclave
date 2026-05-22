@@ -1,20 +1,23 @@
 package co.edu.uptc.model;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 public class CardinalDean {
 	private int busy;
 	private String message;
 	private String deanName;
-	
+
 	public CardinalDean() {
 		busy=0;	
 		message="";
 		deanName="";
 	}
-	
+
 	public String roleOccupied(int rol, String name) {
 		busy=rol;
 		if (busy==1) {
-		message="Este rol ya esta ocupado, tu no eres el cardenal Decano";
+			message="Este rol ya esta ocupado, tu no eres el cardenal Decano";
 		}
 		else {
 			deanName=name;
@@ -22,11 +25,10 @@ public class CardinalDean {
 		}
 		return message;
 	}
-	
+
 	public String confirmPapa() {
 		message="Yo "+deanName+ " como el Decano te pregunto, cardenal electo: ¿Acepta ser el Sumo Pontífice?";
 		return message;
 	}
-
 }
 

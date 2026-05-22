@@ -1,12 +1,15 @@
 package co.edu.uptc.model;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 public class VotingDayControl {
-private int day;
-private String journey;
-private int morningVotes;
-private int afternoonVotes;
-private int totalVotes;
-	
+	private int day;
+	private String journey;
+	private int morningVotes;
+	private int afternoonVotes;
+	private int totalVotes;
+
 	public VotingDayControl() {
 		day=1;
 		journey="Mañana";
@@ -14,7 +17,7 @@ private int totalVotes;
 		afternoonVotes=0;
 		totalVotes=0;
 	}
-	
+
 	public void registerVoting() {
 		totalVotes++;
 		if(journey.equals("Mañana")) {
@@ -38,11 +41,12 @@ private int totalVotes;
 		String message="Día: "+ day+ "\nJornada: "+ journey;
 		return message;
 	}
+	
 	public int getTotalVotes() {
 		return totalVotes;
 	}
+	
 	public int getDay() {
 		return day;
 	}
-	
 }

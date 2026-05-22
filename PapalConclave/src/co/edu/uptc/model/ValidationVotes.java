@@ -1,7 +1,9 @@
 package co.edu.uptc.model;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 public class ValidationVotes {
-
 
 	public boolean comparison(int cardinalVoters, int numberVotes, int abstention) {
 		boolean comparation=false;
@@ -15,7 +17,6 @@ public class ValidationVotes {
 	}
 
 	public boolean validateWinner(int votesWinner, int cardinalVoters) {
-
 		double requiredVotes = (cardinalVoters * 2.0) / 3.0;
 		boolean elected = false;
 		if(votesWinner >= requiredVotes) {

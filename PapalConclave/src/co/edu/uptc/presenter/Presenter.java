@@ -1,9 +1,10 @@
 package co.edu.uptc.presenter;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
-
 import co.edu.uptc.model.*;
 import co.edu.uptc.view.IOManager;
 
@@ -38,6 +39,10 @@ public class Presenter {
 	private String winner;
 	private ImageIcon icon;
 	private boolean specialVoting;
+	private Validations objectValidations;
+	private boolean stringValid;
+	private boolean onlyNumbers;
+
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -52,6 +57,7 @@ public class Presenter {
 		objectScrutiners=new CardinalScrutiners();
 		objectDayControl=new VotingDayControl();
 		objectImages=new Images();
+		objectValidations=new Validations();
 		message="";
 		age=0;
 		numberCardenals=0;
@@ -66,11 +72,23 @@ public class Presenter {
 		inputPin=0;
 		winner="";
 		specialVoting=false;
+		stringValid=true;
+		onlyNumbers=false;
 	}
 	public void welcome() {
-		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
-		//icon=objectImages.getCardinalsIcon();
-		numberCardenals= Integer.parseInt(objectIOManager.input(message));
+		onlyNumbers=false;
+		while (!onlyNumbers) {
+			message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
+			//icon=objectImages.getCardinalsIcon();
+			String numberCardenalsText= objectIOManager.input(message);
+			if (!objectValidations.onlyNumbers(numberCardenalsText)) {
+				objectIOManager.show("Solo puedes colocar números enteros positivos");
+			}
+			else {
+				numberCardenals=Integer.parseInt(numberCardenalsText);
+				onlyNumbers = true;
+			}
+		}
 		objectCardenalMatrix.createMatrix(numberCardenals);
 		message= "A continuación registraremos la información de los cardenales asistentes";
 		objectIOManager.show(message);
@@ -81,15 +99,51 @@ public class Presenter {
 		boolean protodeacon=false;
 		boolean dean=false;
 		for (i=0; i<numberCardenals;i++) {
-			message="Ingrese su Nombre y Apellido:";
-			name=objectIOManager.input(message);
-			message="Ahora digite su edad: ";
-			age=Integer.parseInt(objectIOManager.input(message));
+			stringValid = true;
+			while (stringValid) {
+				message="Ingrese su Nombre y Apellido:";
+				name=objectIOManager.input(message);
+				if (objectValidations.empty(name)) {
+					objectIOManager.show("No puede estar vacío");
+				} 
+				else if (objectValidations.noNumbers(name)) {
+					objectIOManager.show("No colocar números");
+				}
+				else {
+					stringValid = false;
+				}
+			}
+			onlyNumbers=false;
+			while (!onlyNumbers) {
+				message="Ahora digite su edad: ";
+				String ageText = objectIOManager.input(message);
+				if (!objectValidations.onlyNumbers(ageText)) {
+					objectIOManager.show("Solo puedes colocar números enteros positivos");
+				}
+				else {
+					age=Integer.parseInt(ageText);
+					if (!objectValidations.validAge(age)) {
+						objectIOManager.show("La edad mínima permitida es 40 años");
+					}else {
+						onlyNumbers = true;
+					}
+				}
+			}
 			int range=0;
 			while(range<1 || range>5) {
-				message="Ahora ingrese su rango en la iglesia. \nCardenal Obispo(1)\n"
-						+ "Cardenal Presbítero (2)\nCardenal Diácono (3)\nCardenal Decano (4)\nCardenal Protodiácono (5)\n";
-				range=Integer.parseInt(objectIOManager.input(message));
+				onlyNumbers=false;
+				while (!onlyNumbers) {
+					message="Ahora ingrese su rango en la iglesia. \nCardenal Obispo(1)\n"
+							+ "Cardenal Presbítero (2)\nCardenal Diácono (3)\nCardenal Decano (4)\nCardenal Protodiácono (5)\n";
+					String rangeText=objectIOManager.input(message);
+					if (!objectValidations.onlyNumbers(rangeText)) {
+						objectIOManager.show("Solo puedes colocar números enteros positivos");
+					}
+					else {
+						range=Integer.parseInt(rangeText);
+						onlyNumbers = true;
+					}
+				}
 				switch (range) {
 				case 1:
 					letterRange="Cardenal Obispo";
@@ -131,7 +185,6 @@ public class Presenter {
 					break;
 				}
 			}
-
 			objectCardinal=new Cardinal(name,age,letterRange);
 			objectIOManager.show(objectCardinal.validationVote(age));
 			boolean vote=objectCardinal.getVote();
@@ -146,10 +199,10 @@ public class Presenter {
 				objectTotalCardinals.fillArray(objectCardinal);
 			}
 		}
-		showMatrix();
 		minimunCardinals();
 		return "";
-	}	 
+	}
+	
 	public void minimunCardinals() {
 		boolean again=objectRoleAsigned.confirmVoters(objectVoters.getVoters());
 		if(again==true) {
@@ -161,8 +214,8 @@ public class Presenter {
 			asigmentRoles();
 		}
 	}
+	
 	public void asigmentRoles() {
-
 		objectRoleAsigned.assignRoles(objectVoters.getVoters());
 		message="Tras el sorteo reglamentario los roles fueron asignados.\nLos escrutadores serán:";
 		objectIOManager.show(message);
@@ -180,10 +233,12 @@ public class Presenter {
 		objectIOManager.showList(list);
 		votingMenu();
 	}
+	
 	public void recibeNamesMatrix(){
 		namesMatrix=new String [numberCardenals][2];
 		namesMatrix=objectCardenalMatrix.getNamesMatrix();
 	}
+	
 	public void fillNamesMatrix() {
 		namesMatrix[voterPossition][j]=name;
 		namesMatrix[voterPossition][j+1]=letterRange;
@@ -239,6 +294,7 @@ public class Presenter {
 		}
 		validationQuantity();
 	}
+	
 	public void validationQuantity() {
 		objectDayControl.registerVoting();
 		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes, abstention);
@@ -247,8 +303,18 @@ public class Presenter {
 			objectIOManager.show(message);
 			boolean access=false;
 			while(access==false) {
-				message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
-				inputPin=Integer.parseInt(objectIOManager.input(message));
+				onlyNumbers=false;
+				while (!onlyNumbers) {
+					message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
+					String inputPinText=objectIOManager.input(message);
+					if (!objectValidations.onlyNumbers(inputPinText)) {
+						objectIOManager.show("Solo puedes colocar números enteros positivos");
+					}
+					else {
+						inputPin=Integer.parseInt(inputPinText);
+						onlyNumbers = true;
+					}
+				}
 				access=objectScrutiners.confirmAccess(inputPin);
 				if (access) {
 					access=true;
@@ -271,8 +337,8 @@ public class Presenter {
 			abstention = 0;
 			votingMenu();
 		}
-
 	}
+
 	public void validationWinner() {
 		winner = objectRecordVotes.winnerCandidate();
 		int votesWinner = objectRecordVotes.getVotesWinner(winner);
@@ -281,7 +347,6 @@ public class Presenter {
 			message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
 			objectIOManager.show(message);
 			confirmPapa();
-
 		}
 		else {
 			message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
@@ -291,7 +356,6 @@ public class Presenter {
 			numberVotes = 0;
 			abstention = 0;
 			votingMenu();
-
 		}
 	}
 
@@ -311,6 +375,7 @@ public class Presenter {
 			votingMenu();
 		}
 	}
+
 	public void specialVotation() {
 		if(objectDayControl.getDay()==4 && specialVoting==false) {
 			objectRecordVotes.selectetFinalist(objectTotalCardinals);
@@ -319,33 +384,17 @@ public class Presenter {
 			objectIOManager.show(message);
 		}
 	}
+
 	public void announcement() {
 		message=objectProtodeacon.announcementPapa(winner);
 		objectIOManager.show(message);
 		historial();
 	}
+
 	public void historial() {
 		message="Hemos finalizado el proceso del conclave, este proceso ha durado: \n"+objectDayControl.getDay() +" Días \n"+"Se realizaron "+objectDayControl.getTotalVotes()+" votaciones" ;
-
 	}
 
-
-	//RECORDAR BORRAR SHOWMATRIX
-
-	public void showMatrix() {
-		for (int i=0; i<namesMatrix.length; i++) {
-			for(int j=0; j<namesMatrix[i].length;j++) {
-				System.out.print(namesMatrix[i][j]+" ");
-			}
-			System.out.println();
-		}
-		System.out.println("cardenales votantes: "+ cardinalVoters);
-		ArrayList<Cardinal> voters = objectVoters.getVoters();
-		for(Cardinal objectCardinal : voters) {
-			System.out.println(objectCardinal);
-		}
-
-	}
 	public void init() {
 		welcome();
 	}

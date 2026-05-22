@@ -1,17 +1,19 @@
 package co.edu.uptc.model;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RoleAsigned {
-
 	private ArrayList <Cardinal> voters;
 	private ArrayList<Cardinal> scrutineers;
 	private ArrayList<Cardinal> reviewers;
 	private ArrayList<Cardinal> assistants;
 	private Random random;
 	private int position;
-	
+
 	public RoleAsigned() {
 		voters=new ArrayList<>();
 		scrutineers =new ArrayList<>();
@@ -39,11 +41,7 @@ public class RoleAsigned {
 			if (!temporal.contains(objectCardinal)) {
 				temporal.add(objectCardinal);
 			}
-			else {
-			//repite el random. 
-			}
 		}
-		
 		for(int i=0;i<3;i++) {
 			scrutineers.add(temporal.get(i));
 		}
@@ -54,15 +52,16 @@ public class RoleAsigned {
 			assistants.add(temporal.get(i));
 		}
 	}
-	
+
 	public ArrayList<Cardinal> getScrutineers(){
 		return scrutineers;
 	}
+
 	public ArrayList<Cardinal> getReviewers(){
 		return reviewers;
 	}
+
 	public ArrayList<Cardinal> getAssistants(){
 		return assistants;
 	}
-	
 }

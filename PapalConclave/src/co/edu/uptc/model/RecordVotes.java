@@ -1,11 +1,14 @@
 package co.edu.uptc.model;
-
+/* Names: Sebastian Felipe Rodríguez Sánchez y Paula Estefanía Timarán Amezquita
+ * Date: 23/05/26
+ * Description: Proyecto Final
+ */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RecordVotes {
-	private   int maxVotes;
+	private int maxVotes;
 	private Map <String,Integer> votes;
 	private ArrayList<Cardinal>finalist;
 	private String firstName;
@@ -18,21 +21,16 @@ public class RecordVotes {
 		firstName="";
 		secondName="";
 	}
+
 	public void fillVotes(Cardinal found) {
 		String name=found.getName();
 		if(votes.containsKey(name)) {
-
 			int currentVotes = votes.get(name);
-
 			votes.put(name, currentVotes + 1);
-
 		}
 		else {
-
 			votes.put(name, 1);
-
 		}
-
 	}
 	public void clean() {
 		votes.clear();
@@ -48,7 +46,6 @@ public class RecordVotes {
 				winner = candidate;
 			}
 		}
-
 		return winner;
 	}
 
@@ -57,52 +54,38 @@ public class RecordVotes {
 	}
 
 	public void selectetFinalist(TotalCardinals objectTotalCardinals) {
-
 		finalist.clear();
-
 		firstName = winnerCandidate();
-
 		Cardinal first = objectTotalCardinals.searchCardinal(firstName);
 		if (first!=null) {
 			finalist.add(first);
 		}
-
 		votes.remove(firstName);
-
 		secondName = winnerCandidate();
-
 		Cardinal second = objectTotalCardinals.searchCardinal(secondName);
-
 		if (second !=null) {
 			finalist.add(second);
 		}
-
 		votes.remove(secondName);
 		System.out.println(finalist);
 	}
 
 	public Cardinal searchFinalist(String candidate) {
-
 		Cardinal found = null;
-
 		for(Cardinal finalistCandidate : finalist) {
 			if(finalistCandidate!=null) {
 				if(finalistCandidate.getName().equalsIgnoreCase(candidate)) {
-
 					found = finalistCandidate;
 				}
 			}
 		}
-
 		return found;
 	}
 
 	public String showVotes() {
 		String message="";
 		for(String name : votes.keySet()) {
-
 			message+=name + " : " + votes.get(name)+"\n";
-
 		}
 		return message;
 	}
@@ -110,7 +93,7 @@ public class RecordVotes {
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public String getSecondName() {
 		return secondName;
 	}
