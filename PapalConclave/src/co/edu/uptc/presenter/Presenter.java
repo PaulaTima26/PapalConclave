@@ -37,6 +37,7 @@ public class Presenter {
 	private int inputPin;
 	private String winner;
 	private ImageIcon icon;
+	private boolean specialVoting;
 
 	public Presenter() {
 		objectIOManager=new IOManager();
@@ -64,6 +65,7 @@ public class Presenter {
 		numberVotes=0;
 		inputPin=0;
 		winner="";
+		specialVoting=false;
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
@@ -186,8 +188,8 @@ public class Presenter {
 		namesMatrix[voterPossition][j]=name;
 		namesMatrix[voterPossition][j+1]=letterRange;
 	}
-	
-	public String votingMenu() {
+
+	public void votingMenu() {
 		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina "+ objectDayControl.getProces();
 		objectIOManager.show(message);
 		for(int j=0; j<cardinalVoters; j++) {
@@ -205,13 +207,24 @@ public class Presenter {
 				while(repetition) {
 					message="Cardenal: "+ name+ ", digite el nombre y apellido de su candidato.";
 					String candidate=objectIOManager.input(message);
-					Cardinal found=objectTotalCardinals.searchCardinal(candidate);
+					Cardinal found;
+					if(specialVoting==true) {
+						found=objectRecordVotes.searchFinalist(candidate);
+						if (found==null) {
+							message="Voto invalido. Para que tu voto sea valido, debes votar por los 2 cardenales más votados: \n "+ objectRecordVotes.getFirstName()+ "o "+ objectRecordVotes.getSecondName();
+							objectIOManager.show(message);
+							repetition=true;
+						}
+					} 
+					else {
+						found=objectTotalCardinals.searchCardinal(candidate);
+					}
 					if (found==null) {
 						message="Voto invalido. Para que tu voto sea valido, es necesario que escribas el nombre y apellido correctamente";
 						objectIOManager.show(message);
 						repetition=true;
 					}
-					else {
+					if (found!=null) {
 						objectRecordVotes.fillVotes(found);
 						repetition=false;
 						numberVotes++;
@@ -219,12 +232,12 @@ public class Presenter {
 				}
 				break;
 			default:
-				//System.exit(0);
+				message="opcion invalida";
+				objectIOManager.show(message);
 				break;
 			}
 		}
 		validationQuantity();
-		return "";
 	}
 	public void validationQuantity() {
 		objectDayControl.registerVoting();
@@ -273,10 +286,12 @@ public class Presenter {
 		else {
 			message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
 			objectIOManager.show(message);
+			specialVotation();
 			objectRecordVotes.clean();
 			numberVotes = 0;
 			abstention = 0;
 			votingMenu();
+
 		}
 	}
 
@@ -296,17 +311,27 @@ public class Presenter {
 			votingMenu();
 		}
 	}
+	public void specialVotation() {
+		if(objectDayControl.getDay()==4 && specialVoting==false) {
+			objectRecordVotes.selectetFinalist(objectTotalCardinals);
+			specialVoting=true;
+			message= "A partir del día 4 solo podrán ser votados los dos candidatos más apoyados";
+			objectIOManager.show(message);
+		}
+	}
 	public void announcement() {
 		message=objectProtodeacon.announcementPapa(winner);
 		objectIOManager.show(message);
+		historial();
 	}
 	public void historial() {
 		message="Hemos finalizado el proceso del conclave, este proceso ha durado: \n"+objectDayControl.getDay() +" Días \n"+"Se realizaron "+objectDayControl.getTotalVotes()+" votaciones" ;
-		
+
 	}
-	
+
+
 	//RECORDAR BORRAR SHOWMATRIX
-	
+
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {
 			for(int j=0; j<namesMatrix[i].length;j++) {
