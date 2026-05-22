@@ -95,7 +95,7 @@ public class Presenter {
 		recibeNamesMatrix();
 		requestInformation();
 	}
-	public String requestInformation() {
+	public void requestInformation() {
 		boolean protodeacon=false;
 		boolean dean=false;
 		for (i=0; i<numberCardenals;i++) {
@@ -200,7 +200,6 @@ public class Presenter {
 			}
 		}
 		minimunCardinals();
-		return "";
 	}
 	
 	public void minimunCardinals() {
@@ -250,12 +249,15 @@ public class Presenter {
 		for(int j=0; j<cardinalVoters; j++) {
 			String name = namesMatrix[j][0];
 			String range = namesMatrix[j][1];
-			message=range+ " "+ name +"¿Qué va a hacer en este momento? ";
+			boolean continuation=false;
+			while(continuation==false) {
+			message=range+ " "+ name +" ¿Qué va a hacer en este momento? ";
 			String []options= {"Abstenerse al voto", "Votar"};
 			int election=objectIOManager.optionsInput(message, null, options);
 			switch (election) {
 			case 0:
 				abstention++;
+				continuation=true;
 				break;
 			case 1:
 				boolean repetition=true;
@@ -285,11 +287,13 @@ public class Presenter {
 						numberVotes++;
 					}
 				}
+				continuation=true;
 				break;
 			default:
-				message="opcion invalida";
+				message="opcion invalida, vuelva a intentar";
 				objectIOManager.show(message);
 				break;
+			}
 			}
 		}
 		validationQuantity();
