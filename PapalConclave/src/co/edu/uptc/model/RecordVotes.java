@@ -7,9 +7,11 @@ import java.util.Map;
 public class RecordVotes {
 	private   int maxVotes;
 	private Map <String,Integer> votes;
+	private ArrayList<String>finalist;
 	
 	public RecordVotes() {
 		votes=new HashMap<>();
+		finalist=new ArrayList<>();
 		maxVotes=0;
 	}
 	public void fillVotes(Cardinal found) {
@@ -29,35 +31,35 @@ public class RecordVotes {
 
 	}
 	public void clean() {
-	    maxVotes = 0;
 		votes.clear();
 	}
 	
 	public String winnerCandidate() {
-
 	    String winner = "";
-	  
-
+	    int maxVotes=0;
 	    for(String candidate : votes.keySet()) {
-
 	        int currentVotes = votes.get(candidate);
-
 	        if(currentVotes > maxVotes) {
-
 	            maxVotes = currentVotes;
 	            winner = candidate;
-
 	        }
 	    }
 
 	    return winner;
 	}
-	public int getMaxVotes() {
-		return maxVotes;
+	
+	public int getVotesWinner(String winner) {
+		return votes.get(winner);
 	}
 	
 	public void selectetFinalist() {
-		
+		finalist.clear();
+		String first=winnerCandidate();
+		finalist.add(first);
+		votes.remove(first);
+		String second=winnerCandidate();
+		finalist.add(second);
+		votes.remove(second);
 	}
 	
 	public String showVotes() {

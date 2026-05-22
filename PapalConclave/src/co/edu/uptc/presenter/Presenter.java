@@ -262,7 +262,7 @@ public class Presenter {
 	}
 	public void validationWinner() {
 		winner = objectRecordVotes.winnerCandidate();
-		int votesWinner = objectRecordVotes.getMaxVotes();
+		int votesWinner = objectRecordVotes.getVotesWinner(winner);
 		boolean elected =objectValidationVote.validateWinner(votesWinner, cardinalVoters);
 		if(elected == true) {
 			message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
