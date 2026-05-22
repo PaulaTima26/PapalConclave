@@ -9,28 +9,30 @@ import javax.swing.JOptionPane;
 import co.edu.uptc.model.Cardinal;
 
 public class IOManager {
-
-	public String input(String message) {
-		String data=JOptionPane.showInputDialog(message);
-		return data;
-	}
-
-	public String show(String message) {
-		JOptionPane.showMessageDialog(null, message);
-		return message;
-	}
-
 	public int optionsInput(String message, ImageIcon icon, Object[] options) {
 		int option= JOptionPane.showOptionDialog(null, message,"MENÚ", 0, 0,icon, options, "");
 		return option;
 	}
 
-	public void showList(ArrayList<Cardinal> listTwo){
+	public void showList(ArrayList<Cardinal> listTwo, ImageIcon icon){
 		ArrayList <Cardinal>list=listTwo;
 		String message="";
 		for(Cardinal objectCardinal : list) {
 			message+=objectCardinal+"\n";
 		}
-		JOptionPane.showMessageDialog(null, message);
+		JOptionPane.showMessageDialog(null, message, "ROLES", 0, icon);
 	}
+	public String inputMessageIcon(String message, String string, ImageIcon icon) {
+		String data=(String) JOptionPane.showInputDialog(null, message, string ,JOptionPane.INFORMATION_MESSAGE, icon, null, "");
+		return data;
+	}
+	public String showMessageIcon(String message, String string, ImageIcon icon) {
+		JOptionPane.showMessageDialog(null, message, string, 0, icon);
+		return "";
+	}
+	public String showMessageIconError(String message, ImageIcon icon) {
+		JOptionPane.showMessageDialog(null, message, "ERROR", 0, icon);
+		return "";
+	}
+	
 }

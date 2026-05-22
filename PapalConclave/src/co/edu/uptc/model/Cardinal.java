@@ -4,10 +4,10 @@ package co.edu.uptc.model;
  * Description: Proyecto Final
  */
 public class Cardinal {
-	private String name;
-	private int age; 
-	private String range;
-	private boolean vote;
+	protected String name;
+	protected int age; 
+	protected String range;
+	protected boolean vote;
 	
 	public Cardinal(String name, int age, String letterRange) {
 		this.name=name;
@@ -24,7 +24,7 @@ public class Cardinal {
 			vote= true;
 		}
 		else {
-			message="Usted no está autorizado para votar.";
+			message="Usted no está autorizado para votar, solo pueden votar cardenales menores de 80";
 			vote=false;
 		}
 		return message;
@@ -38,5 +38,12 @@ public class Cardinal {
 	}
 	public boolean getVote() {
 		return vote;
+	}
+
+	public String getRange() {
+		return range;
+	}
+	public int getAge() {
+		return age;
 	}
 }

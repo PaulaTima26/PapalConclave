@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecordVotes {
-	private int maxVotes;
 	private Map <String,Integer> votes;
 	private ArrayList<Cardinal>finalist;
 	private String firstName;
@@ -17,7 +16,6 @@ public class RecordVotes {
 	public RecordVotes() {
 		votes=new HashMap<>();
 		finalist=new ArrayList<>();
-		maxVotes=0;
 		firstName="";
 		secondName="";
 	}

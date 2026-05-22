@@ -3,31 +3,29 @@ package co.edu.uptc.model;
  * Date: 23/05/26
  * Description: Proyecto Final
  */
-public class CardinalProtodeacon {
+public class CardinalProtodeacon extends Cardinal{
 	private int busy;
-	private String protodeaconName;
 	private String message;
 
-	public CardinalProtodeacon() {
+	public CardinalProtodeacon(String name, int age, String range) {
+		super(name,age,range);
 		busy=0;
-		protodeaconName="";
 		message="";
 	}
 
-	public String roleOccupied(int rol, String name) {
+	public String roleOccupied(int rol) {
 		busy=rol;
 		if (busy==1) {
 			message="Este rol ya esta ocupado, tu no eres el cardenal protodiácono";
 		}
 		else {
-			protodeaconName=name;
-			message="Es usted el cardenal protodiácono, es un honor";
+			message="Cardenal "+name + " es usted el cardenal protodiácono, es un honor";
 		}
 		return message;
 	}
 
 	public String announcementPapa(String winner) {
-		message="Yo "+protodeaconName+ " como el Protodiácono anuncio: 'Habemus Papam' de nombre: "+ winner;
+		message="Yo "+name+ " como el Protodiácono anuncio: 'Habemus Papam' de nombre: "+ winner;
 		return message;
 	}
 }

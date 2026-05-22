@@ -47,8 +47,8 @@ public class Presenter {
 	public Presenter() {
 		objectIOManager=new IOManager();
 		objectCardenalMatrix=new CardinalMatrix();
-		objectProtodeacon=new CardinalProtodeacon();
-		objectDean =new CardinalDean();
+		objectProtodeacon=new CardinalProtodeacon(name, age, letterRange);
+		objectDean =new CardinalDean(name, age, letterRange);
 		objectVoters=new CardinalVoters();
 		objectRoleAsigned=new RoleAsigned();
 		objectRecordVotes=new RecordVotes();
@@ -78,11 +78,13 @@ public class Presenter {
 	public void welcome() {
 		onlyNumbers=false;
 		while (!onlyNumbers) {
-			message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
-			//icon=objectImages.getCardinalsIcon();
-			String numberCardenalsText= objectIOManager.input(message);
+			message="Bienvenido al sistema del conclave, ¿Cuántos cardenales asistieron al conclave?";
+			icon=objectImages.getCardinalsIcon();
+			String numberCardenalsText=objectIOManager.inputMessageIcon(message,"INGRESO AL SISTEMA", icon);
 			if (!objectValidations.onlyNumbers(numberCardenalsText)) {
-				objectIOManager.show("Solo puedes colocar números enteros positivos");
+				icon=objectImages.getGenericError();
+				objectIOManager.showMessageIconError("Solo puedes colocar números enteros positivos", icon);
+				//objectIOManager.show("Solo puedes colocar números enteros positivos");
 			}
 			else {
 				numberCardenals=Integer.parseInt(numberCardenalsText);
@@ -91,7 +93,9 @@ public class Presenter {
 		}
 		objectCardenalMatrix.createMatrix(numberCardenals);
 		message= "A continuación registraremos la información de los cardenales asistentes";
-		objectIOManager.show(message);
+		icon=objectImages.getCardinalsIcon();
+		objectIOManager.showMessageIcon(message,"Información cardenales", icon);
+		//objectIOManager.show(message);
 		recibeNamesMatrix();
 		requestInformation();
 	}
@@ -101,13 +105,18 @@ public class Presenter {
 		for (i=0; i<numberCardenals;i++) {
 			stringValid = true;
 			while (stringValid) {
+				icon=objectImages.getCardenalInformation();
 				message="Ingrese su Nombre y Apellido:";
-				name=objectIOManager.input(message);
+				name=objectIOManager.inputMessageIcon(message,"Registro Cardenales",icon);
+				//name=objectIOManager.input(message);
+				icon=objectImages.getGenericError();
 				if (objectValidations.empty(name)) {
-					objectIOManager.show("No puede estar vacío");
+					objectIOManager.showMessageIconError("No puede estar vacío", icon);
+					//objectIOManager.show("No puede estar vacío");
 				} 
 				else if (objectValidations.noNumbers(name)) {
-					objectIOManager.show("No colocar números");
+					objectIOManager.showMessageIconError("No puede colocar números", icon);
+					//objectIOManager.show("No colocar números");
 				}
 				else {
 					stringValid = false;
@@ -115,15 +124,20 @@ public class Presenter {
 			}
 			onlyNumbers=false;
 			while (!onlyNumbers) {
+				icon=objectImages.getCardenalInformation();
 				message="Ahora digite su edad: ";
-				String ageText = objectIOManager.input(message);
+				String ageText=objectIOManager.inputMessageIcon(message,"Registro Cardenales",icon);
+				//String ageText = objectIOManager.input(message);
+				icon=objectImages.getGenericError();
 				if (!objectValidations.onlyNumbers(ageText)) {
-					objectIOManager.show("Solo puedes colocar números enteros positivos");
+					objectIOManager.showMessageIconError("Solo puedes colocar números enteros positivos", icon);
+					//objectIOManager.show("Solo puedes colocar números enteros positivos");
 				}
 				else {
 					age=Integer.parseInt(ageText);
 					if (!objectValidations.validAge(age)) {
-						objectIOManager.show("La edad mínima permitida es 40 años");
+						objectIOManager.showMessageIconError("La edad mínima permitida es 40 años", icon);
+						//objectIOManager.show("La edad mínima permitida es 40 años");
 					}else {
 						onlyNumbers = true;
 					}
@@ -131,13 +145,18 @@ public class Presenter {
 			}
 			int range=0;
 			while(range<1 || range>5) {
+				icon=objectImages.getCardenalInformation();
 				onlyNumbers=false;
 				while (!onlyNumbers) {
+					icon=objectImages.getCardenalInformation();
 					message="Ahora ingrese su rango en la iglesia. \nCardenal Obispo(1)\n"
 							+ "Cardenal Presbítero (2)\nCardenal Diácono (3)\nCardenal Decano (4)\nCardenal Protodiácono (5)\n";
-					String rangeText=objectIOManager.input(message);
+					String rangeText=objectIOManager.inputMessageIcon(message,"Registro Cardenales",icon);
+					//String rangeText=objectIOManager.input(message);
+					icon=objectImages.getGenericError();
 					if (!objectValidations.onlyNumbers(rangeText)) {
-						objectIOManager.show("Solo puedes colocar números enteros positivos");
+						objectIOManager.showMessageIconError("Solo puedes colocar números enteros positivos", icon);
+						//objectIOManager.show("Solo puedes colocar números enteros positivos");
 					}
 					else {
 						range=Integer.parseInt(rangeText);
@@ -155,38 +174,48 @@ public class Presenter {
 					letterRange="Cardenal Diácono";
 					break;
 				case 4:
+					icon=objectImages.getCardinalsIcon();
 					if (dean==false) {
-						rol=0;
 						letterRange= "Cardenal Decano";
+						rol=0;
+						objectDean=new CardinalDean(name,age,letterRange);
 						dean=true;
 					}				
 					else{
 						rol=1;
 						range=0;	
 					}
-					message=objectDean.roleOccupied(rol,name);
-					objectIOManager.show(message);
+					message=objectDean.roleOccupied(rol);
+					objectIOManager.showMessageIcon(message, letterRange, icon);
+					//objectIOManager.show(message);
 					break;
 				case 5:
+					icon=objectImages.getCardinalsIcon();
 					if (protodeacon==false) {
 						rol=0;
-						letterRange= "Cardenal Protodiacono";
+						letterRange= "Cardenal Protodiácono";
+						objectProtodeacon=new CardinalProtodeacon(name,age,letterRange);
 						protodeacon=true;
 					}
 					else {
 						rol=1;
 						range=0;
 					}
-					message=objectProtodeacon.roleOccupied(rol,name);
-					objectIOManager.show(message);
+					message=objectProtodeacon.roleOccupied(rol);
+					objectIOManager.showMessageIcon(message, letterRange, icon);
+					//objectIOManager.show(message);
 					break;
 				default:
-					objectIOManager.show("Opción invalida");
+					icon=objectImages.getGenericError();
+					objectIOManager.showMessageIconError("Opción invalida", icon);
+					//objectIOManager.show("Opción invalida");
 					break;
 				}
 			}
+			icon=objectImages.getCardinalsIcon();
 			objectCardinal=new Cardinal(name,age,letterRange);
-			objectIOManager.show(objectCardinal.validationVote(age));
+			objectIOManager.showMessageIcon(objectCardinal.validationVote(age), "Validación de voto por la edad", icon);
+			//objectIOManager.show(objectCardinal.validationVote(age));
 			boolean vote=objectCardinal.getVote();
 			if (vote==true) {
 				objectVoters.fillArray(objectCardinal);
@@ -201,118 +230,142 @@ public class Presenter {
 		}
 		minimunCardinals();
 	}
-	
+
 	public void minimunCardinals() {
 		boolean again=objectRoleAsigned.confirmVoters(objectVoters.getVoters());
 		if(again==true) {
+			icon=objectImages.getGenericError();
 			message="Hay menos de 9 cardenales votantes, debes esperar que llegen mas, por eso se repetira el proceso.";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIconError(message, icon);
+			//objectIOManager.show(message);
 			welcome();
 		}
 		else {
 			asigmentRoles();
 		}
 	}
-	
+
 	public void asigmentRoles() {
+		icon=objectImages.getCardinalsIcon();
 		objectRoleAsigned.assignRoles(objectVoters.getVoters());
 		message="Tras el sorteo reglamentario los roles fueron asignados.\nLos escrutadores serán:";
-		objectIOManager.show(message);
+		objectIOManager.showMessageIcon(message, "Asignación de roles", icon);
+		//objectIOManager.show(message);
 		ArrayList<Cardinal> list=objectRoleAsigned.getScrutineers();
-		objectIOManager.showList(list);
+		objectIOManager.showList(list,icon);
 		message="El pin de acceso para los escrutadores es: "+ objectScrutiners.generateAccess();
-		objectIOManager.show(message);
+		objectIOManager.showMessageIcon(message, "Pin escrutadores", icon);
+		//objectIOManager.show(message);
 		message="Los revisores serán:";
-		objectIOManager.show(message);
+		objectIOManager.showMessageIcon(message, "Asignación de roles", icon);
+		//objectIOManager.show(message);
 		list=objectRoleAsigned.getReviewers();
-		objectIOManager.showList(list);
+		objectIOManager.showList(list,icon);
 		message="Los asistentes serán:";
-		objectIOManager.show(message);
+		objectIOManager.showMessageIcon(message, "Asignación de roles", icon);
+		//objectIOManager.show(message);
 		list=objectRoleAsigned.getAssistants();
-		objectIOManager.showList(list);
+		objectIOManager.showList(list,icon);
 		votingMenu();
 	}
-	
+
 	public void recibeNamesMatrix(){
 		namesMatrix=new String [numberCardenals][2];
 		namesMatrix=objectCardenalMatrix.getNamesMatrix();
 	}
-	
+
 	public void fillNamesMatrix() {
 		namesMatrix[voterPossition][j]=name;
 		namesMatrix[voterPossition][j+1]=letterRange;
 	}
 
 	public void votingMenu() {
+		icon=objectImages.getCardinalsIcon();
 		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina "+ objectDayControl.getProces();
-		objectIOManager.show(message);
+		objectIOManager.showMessageIcon(message, "PROCESO DE VOTACIÓN", icon);
+		//objectIOManager.show(message);
 		for(int j=0; j<cardinalVoters; j++) {
 			String name = namesMatrix[j][0];
 			String range = namesMatrix[j][1];
 			boolean continuation=false;
 			while(continuation==false) {
-			message=range+ " "+ name +" ¿Qué va a hacer en este momento? ";
-			String []options= {"Abstenerse al voto", "Votar"};
-			int election=objectIOManager.optionsInput(message, null, options);
-			switch (election) {
-			case 0:
-				abstention++;
-				continuation=true;
-				break;
-			case 1:
-				boolean repetition=true;
-				while(repetition) {
-					message="Cardenal: "+ name+ ", digite el nombre y apellido de su candidato.";
-					String candidate=objectIOManager.input(message);
-					Cardinal found;
-					if(specialVoting==true) {
-						found=objectRecordVotes.searchFinalist(candidate);
+				icon=objectImages.getVote();
+				message=range+ " "+ name +" ¿Qué va a hacer en este momento? ";
+				String []options= {"Abstenerse al voto", "Votar"};
+				int election=objectIOManager.optionsInput(message, icon, options);
+				switch (election) {
+				case 0:
+					abstention++;
+					continuation=true;
+					break;
+				case 1:
+					boolean repetition=true;
+					while(repetition) {
+						message="Cardenal: "+ name+ ", digite el nombre y apellido de su candidato.";
+						String candidate=objectIOManager.inputMessageIcon(message,"Proceso de votación",icon);
+						//String candidate=objectIOManager.input(message);
+						Cardinal found;
+						if(specialVoting==true) {
+							found=objectRecordVotes.searchFinalist(candidate);
+							if (found==null) {
+								icon=objectImages.getGenericError();
+								message="Voto invalido. Para que tu voto sea valido, debes votar por los 2 cardenales más votados: \n "+ objectRecordVotes.getFirstName()+ "o "+ objectRecordVotes.getSecondName();
+								objectIOManager.showMessageIcon(message,"Cardenal no disponible", icon);
+								//objectIOManager.show(message);
+								repetition=true;
+							}
+						} 
+						else {
+							found=objectTotalCardinals.searchCardinal(candidate);
+						}
 						if (found==null) {
-							message="Voto invalido. Para que tu voto sea valido, debes votar por los 2 cardenales más votados: \n "+ objectRecordVotes.getFirstName()+ "o "+ objectRecordVotes.getSecondName();
-							objectIOManager.show(message);
+							icon=objectImages.getGenericError();
+							message="Voto invalido. Para que tu voto sea valido, es necesario que escribas el nombre y apellido correctamente";
+							objectIOManager.showMessageIcon(message, "Cardenal no encontrado", icon);
+							//objectIOManager.show(message);
 							repetition=true;
 						}
-					} 
-					else {
-						found=objectTotalCardinals.searchCardinal(candidate);
+						if (found!=null) {
+							objectRecordVotes.fillVotes(found);
+							repetition=false;
+							numberVotes++;
+						}
 					}
-					if (found==null) {
-						message="Voto invalido. Para que tu voto sea valido, es necesario que escribas el nombre y apellido correctamente";
-						objectIOManager.show(message);
-						repetition=true;
-					}
-					if (found!=null) {
-						objectRecordVotes.fillVotes(found);
-						repetition=false;
-						numberVotes++;
-					}
+					continuation=true;
+					break;
+				default:
+					icon=objectImages.getGenericError();
+					message="opcion invalida, vuelva a intentar";
+					objectIOManager.showMessageIconError(message, icon);
+					//objectIOManager.show(message);
+					break;
 				}
-				continuation=true;
-				break;
-			default:
-				message="opcion invalida, vuelva a intentar";
-				objectIOManager.show(message);
-				break;
-			}
 			}
 		}
 		validationQuantity();
 	}
-	
+
 	public void validationQuantity() {
 		objectDayControl.registerVoting();
 		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes, abstention);
 		if (comparation) {
+			icon=objectImages.getUrnaIcon();
 			message="Se guardaron los resultados de la votación";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message, "Resultados", icon);
+			//objectIOManager.show(message);
 			boolean access=false;
 			while(access==false) {
+				icon=objectImages.getUrnaIcon();
 				onlyNumbers=false;
 				while (!onlyNumbers) {
+					icon=objectImages.getUrnaIcon();
 					message="Cardenal escrutador, para acceder a los resultados, digite el pin: ";
-					String inputPinText=objectIOManager.input(message);
+					String inputPinText=objectIOManager.inputMessageIcon(message,"Escrutinio",icon);
+					//String inputPinText=objectIOManager.input(message);
 					if (!objectValidations.onlyNumbers(inputPinText)) {
-						objectIOManager.show("Solo puedes colocar números enteros positivos");
+						icon=objectImages.getGenericError();
+						objectIOManager.showMessageIconError("Solo puedes colocar números enteros positivos", icon);
+						//objectIOManager.show("Solo puedes colocar números enteros positivos");
 					}
 					else {
 						inputPin=Integer.parseInt(inputPinText);
@@ -321,22 +374,28 @@ public class Presenter {
 				}
 				access=objectScrutiners.confirmAccess(inputPin);
 				if (access) {
+					icon=objectImages.getUrnaIcon();
 					access=true;
 					message=objectRecordVotes.showVotes();
-					objectIOManager.show(message);
+					objectIOManager.showMessageIcon(message, "Resultados", icon); 
+					//objectIOManager.show(message);
 					validationWinner();
 				}
 				else {
 					access=false;
+					icon=objectImages.getGenericError();
 					message="Ese no es el pin, intentelo de nuevo.";
-					objectIOManager.show(message);
+					objectIOManager.showMessageIconError(message, icon);
+					//objectIOManager.show(message);
 				}
 			}
 		}
 		else {
 			objectRecordVotes.clean();
+			icon=objectImages.getNoPapaIcon();
 			message="El número de votos fue menor al de cardenales votantes. Resultados anulados.";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message,"Sede Vacante", icon);
+			//objectIOManager.show(message);
 			numberVotes = 0;
 			abstention = 0;
 			votingMenu();
@@ -348,13 +407,17 @@ public class Presenter {
 		int votesWinner = objectRecordVotes.getVotesWinner(winner);
 		boolean elected =objectValidationVote.validateWinner(votesWinner, cardinalVoters);
 		if(elected == true) {
+			icon=objectImages.getUrnaIcon();
 			message = winner +"ha obtenido los votos necesarios para ser elegido Papa. Pase al frente";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message, "Candidato electo", icon);
+			//objectIOManager.show(message);
 			confirmPapa();
 		}
 		else {
+			icon=objectImages.getNoPapaIcon();
 			message = "Ningún candidato alcanzó los 2/3. Iniciara una nueva votación.";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message, "Sede Vacante", icon);
+			//objectIOManager.show(message);
 			specialVotation();
 			objectRecordVotes.clean();
 			numberVotes = 0;
@@ -365,15 +428,18 @@ public class Presenter {
 
 	public void confirmPapa() {
 		message=objectDean.confirmPapa();
+		icon=objectImages.getCardinalsIcon();
 		String [] options = {"Sí acepto", "No acepto"};
-		int answer =objectIOManager.optionsInput(message,null,options);
+		int answer =objectIOManager.optionsInput(message,icon,options);
 		if(answer==0) {
 			announcement();
 		}
 		else {
 			objectRecordVotes.clean();
+			icon=objectImages.getNoPapaIcon();
 			message="El cardenal ha rechazado el puesto. Iniciaremos otra ronda de votación";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message, "Sede Vacante", icon);
+			//objectIOManager.show(message);
 			numberVotes = 0;
 			abstention = 0;
 			votingMenu();
@@ -382,21 +448,29 @@ public class Presenter {
 
 	public void specialVotation() {
 		if(objectDayControl.getDay()==4 && specialVoting==false) {
+			icon=objectImages.getUrnaIcon();
 			objectRecordVotes.selectetFinalist(objectTotalCardinals);
 			specialVoting=true;
 			message= "A partir del día 4 solo podrán ser votados los dos candidatos más apoyados";
-			objectIOManager.show(message);
+			objectIOManager.showMessageIcon(message, "Escrutinio Extraordinario", icon);
+			//objectIOManager.show(message);
 		}
 	}
 
 	public void announcement() {
-		message=objectProtodeacon.announcementPapa(winner);
-		objectIOManager.show(message);
+		icon=objectImages.getHabemusPapaIcon();
+		Cardinal pope = objectTotalCardinals.searchCardinal(winner);
+		message = objectProtodeacon.announcementPapa(winner) + "\n\nInformación del nuevo Papa:\n" + "Nombre: " + pope.getName()
+		+ "\nEdad: " + pope.getAge() + "\nRango: " + pope.getRange();
+		objectIOManager.showMessageIcon(message, "ANUNCIO OFICIAL", icon);
+		//objectIOManager.show(message);
 		historial();
 	}
 
 	public void historial() {
+		icon=objectImages.getCardinalsIcon();
 		message="Hemos finalizado el proceso del conclave, este proceso ha durado: \n"+objectDayControl.getDay() +" Días \n"+"Se realizaron "+objectDayControl.getTotalVotes()+" votaciones" ;
+		objectIOManager.showMessageIcon(message, "Historial conclave", icon);
 	}
 
 	public void init() {
