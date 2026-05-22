@@ -5,7 +5,7 @@ public class ValidationVotes {
 
 	public boolean comparison(int cardinalVoters, int numberVotes, int abstention) {
 		boolean comparation=false;
-		if (numberVotes + abstention == cardinalVoters) {
+		if (numberVotes< cardinalVoters) {
 			comparation=false;
 		}
 		else {

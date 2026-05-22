@@ -24,7 +24,7 @@ public class CardinalDean {
 	}
 	
 	public String confirmPapa() {
-		message="Yo "+deanName+ "como el Decano te pregunto cardenal electo: ¿Acepta ser el Sumo Pontífice?";
+		message="Yo "+deanName+ " como el Decano te pregunto, cardenal electo: ¿Acepta ser el Sumo Pontífice?";
 		return message;
 	}
 

@@ -12,12 +12,12 @@ public class Images {
 
 
 	public Images() {
-		cardinalsIcon= new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/cardenales.png"));
-		habemusPapaIcon= new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/habemus papa.png"));
-		urnaIcon=new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/urna.png"));
-		noPapaIcon=new ImageIcon(getClass().getResource("/PapalConclave/src/Icons/no hay papa.png"));
-	}
 
+        cardinalsIcon =new ImageIcon(getClass().getResource("/Icons/cardenales.png"));
+        habemusPapaIcon =new ImageIcon(getClass().getResource("/Icons/habemus papa.png"));
+        urnaIcon = new ImageIcon(getClass().getResource("/Icons/urna.png"));
+        noPapaIcon =new ImageIcon(getClass().getResource("/Icons/no hay papa.png"));
+    }
 	public ImageIcon getCardinalsIcon() {
 		return cardinalsIcon;
 	}

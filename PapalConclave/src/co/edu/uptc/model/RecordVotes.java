@@ -55,7 +55,11 @@ public class RecordVotes {
 	public int getMaxVotes() {
 		return maxVotes;
 	}
-	//Pruebita
+	
+	public void selectetFinalist() {
+		
+	}
+	
 	public String showVotes() {
 String message="";
 	    for(String name : votes.keySet()) {

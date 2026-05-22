@@ -19,7 +19,6 @@ private int totalVotes;
 		totalVotes++;
 		if(journey.equals("Mañana")) {
 			morningVotes++;
-			
 			if(morningVotes==2) {
 				journey="Tarde";
 				morningVotes=0;
@@ -38,6 +37,12 @@ private int totalVotes;
 	public String getProces() {
 		String message="Día: "+ day+ "\nJornada: "+ journey;
 		return message;
+	}
+	public int getTotalVotes() {
+		return totalVotes;
+	}
+	public int getDay() {
+		return day;
 	}
 	
 }

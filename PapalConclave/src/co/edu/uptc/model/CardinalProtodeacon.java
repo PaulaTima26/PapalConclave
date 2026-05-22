@@ -24,8 +24,8 @@ public class CardinalProtodeacon {
 		return message;
 	}
 	
-	public String announcementPapa() {
-		message="Yo "+protodeaconName+ "como el Protodeacono digo: 'Habemus Papam' ";
+	public String announcementPapa(String winner) {
+		message="Yo "+protodeaconName+ " como el Protodiácono anuncio: 'Habemus Papam' de nombre: "+ winner;
 		return message;
 	}
 }

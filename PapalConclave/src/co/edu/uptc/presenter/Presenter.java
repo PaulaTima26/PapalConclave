@@ -67,7 +67,7 @@ public class Presenter {
 	}
 	public void welcome() {
 		message="Bienvenido al sistema del conclave, ¿Cuántos cardenales van a votar?";
-		icon=objectImages.getCardinalsIcon();
+		//icon=objectImages.getCardinalsIcon();
 		numberCardenals= Integer.parseInt(objectIOManager.input(message));
 		objectCardenalMatrix.createMatrix(numberCardenals);
 		message= "A continuación registraremos la información de los cardenales asistentes";
@@ -186,6 +186,7 @@ public class Presenter {
 		namesMatrix[voterPossition][j]=name;
 		namesMatrix[voterPossition][j+1]=letterRange;
 	}
+	
 	public String votingMenu() {
 		message="Las votaciones iniciarán a partir de este momento, estamos en la Capilla Sixtina "+ objectDayControl.getProces();
 		objectIOManager.show(message);
@@ -218,16 +219,17 @@ public class Presenter {
 				}
 				break;
 			default:
-				System.exit(0);
+				//System.exit(0);
+				break;
 			}
 		}
 		validationQuantity();
 		return "";
 	}
 	public void validationQuantity() {
+		objectDayControl.registerVoting();
 		boolean comparation=objectValidationVote.comparison(cardinalVoters,numberVotes, abstention);
 		if (comparation) {
-			objectDayControl.registerVoting();
 			message="Se guardaron los resultados de la votación";
 			objectIOManager.show(message);
 			boolean access=false;
@@ -280,7 +282,6 @@ public class Presenter {
 
 	public void confirmPapa() {
 		message=objectDean.confirmPapa();
-		objectIOManager.show(message);
 		String [] options = {"Sí acepto", "No acepto"};
 		int answer =objectIOManager.optionsInput(message,null,options);
 		if(answer==0) {
@@ -296,12 +297,16 @@ public class Presenter {
 		}
 	}
 	public void announcement() {
-		message=objectProtodeacon.announcementPapa();
+		message=objectProtodeacon.announcementPapa(winner);
 		objectIOManager.show(message);
-
+	}
+	public void historial() {
+		message="Hemos finalizado el proceso del conclave, este proceso ha durado: \n"+objectDayControl.getDay() +" Días \n"+"Se realizaron "+objectDayControl.getTotalVotes()+" votaciones" ;
+		
 	}
 	
 	//RECORDAR BORRAR SHOWMATRIX
+	
 	public void showMatrix() {
 		for (int i=0; i<namesMatrix.length; i++) {
 			for(int j=0; j<namesMatrix[i].length;j++) {
